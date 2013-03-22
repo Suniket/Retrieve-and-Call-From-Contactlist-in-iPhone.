@@ -38,6 +38,7 @@
     // Dispose of any resources that can be recreated.
 }
 
+
 - (IBAction)getContact:(id)sender {
     
     // creating the picker
@@ -46,14 +47,14 @@
 	picker.peoplePickerDelegate = self;
 	
 	// showing the picker
-	[self presentModalViewController:picker animated:YES];
+	[self presentViewController:picker animated:YES completion:nil];
 	// releasing
 	
 }
 
 - (void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker {
     // assigning control back to the main controller
-	[self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:Nil];
 }
 
 - (BOOL)peoplePickerNavigationController: (ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person {
@@ -74,14 +75,41 @@
 	ABMultiValueRef multi = ABRecordCopyValue(person, kABPersonPhoneProperty);
 	numberTextField.text = (__bridge NSString*)ABMultiValueCopyValueAtIndex(multi, 0);
 	
+    NSString* msg = [NSString stringWithFormat:@"Do you want to call %@ ", firstNameTextField.text];
+    
+    UIAlertView *callAlert = [[UIAlertView alloc]
+                               initWithTitle:msg
+                               message: numberTextField.text
+                               delegate:self
+                               cancelButtonTitle:@"No"
+                               otherButtonTitles:@"Yes", nil];
+    [callAlert show];
+    
+      
 	// remove the controller
-    [self dismissModalViewControllerAnimated:YES];
+   
+     [self dismissViewControllerAnimated:YES completion:Nil];
     
     return NO;
 }
 
 - (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier{
     return NO;
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0){
+        NSLog(@"buttonIndex: 0");
+
+
+    }else if (buttonIndex == 1){
+        phone_number = numberTextField.text;
+        phoneStr = [[NSString alloc] initWithFormat:@"tel:%@",phone_number];
+        NSURL *phoneURL = [[NSURL alloc] initWithString:phoneStr];
+        [[UIApplication sharedApplication] openURL:phoneURL];
+        NSLog(@"buttonIndex: 1");
+    }
 }
 
 @end

@@ -10,9 +10,12 @@
 #import <AddressBook/AddressBook.h>
 #import <AddressBookUI/AddressBookUI.h>
 
-@interface addressBookViewController : UIViewController <ABPeoplePickerNavigationControllerDelegate>
+@interface addressBookViewController : UIViewController <ABPeoplePickerNavigationControllerDelegate,UIAlertViewDelegate>
 {
 
+    NSString *phone_number;
+    NSString *phoneStr;
+    
     IBOutlet UIButton *contactButton;
     IBOutlet UILabel *firstNameTextField;
 
